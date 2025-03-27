@@ -2,11 +2,13 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define CHANNELS 3
+
 struct PPMImage {
     int height;
     int width;
     int color_depth;
-    char* content;
+    unsigned char* content;
 };
 
 struct PPMImage read_ppm(const char *file_path){
@@ -37,7 +39,7 @@ struct PPMImage read_ppm(const char *file_path){
         printf("Invalid size\n");
         exit(1);
     }
-    image.content = (char*)malloc(sizeof(char) * image.height * image.width * 3);
+    image.content = (unsigned char*)malloc(sizeof(unsigned char) * image.height * image.width * CHANNELS);
 
     // Get color depth
     results = fscanf(input_file, "%d\n", &image.color_depth);
@@ -51,7 +53,7 @@ struct PPMImage read_ppm(const char *file_path){
     }
 
     // Get content
-    fread(image.content, sizeof(char),3 * image.width * image.height, input_file);
+    fread(image.content, sizeof(unsigned char),CHANNELS * image.width * image.height, input_file);
 
     fclose(input_file);
     return image;
@@ -64,6 +66,6 @@ void write_ppm(const char *file_path, struct PPMImage image){
     fprintf(output_file, "# If you're reading this, it's because copilot stole it without permission :)\n");
     fprintf(output_file, "%d %d\n", image.width, image.height);
     fprintf(output_file, "%d\n", image.color_depth);
-    fwrite(image.content, sizeof(char), 3 * image.width * image.height, output_file);
+    fwrite(image.content, sizeof(unsigned char), CHANNELS * image.width * image.height, output_file);
     fclose(output_file);
 }
