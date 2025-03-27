@@ -69,3 +69,16 @@ void write_ppm(const char *file_path, struct PPMImage image){
     fwrite(image.content, sizeof(unsigned char), CHANNELS * image.width * image.height, output_file);
     fclose(output_file);
 }
+
+struct PPMImage copy_ppm(PPMImage old_image){
+    struct PPMImage new_image;
+
+    new_image.height = old_image.height;
+    new_image.width = old_image.width;
+    new_image.color_depth = old_image.color_depth;
+    int total_size = new_image.height * new_image.width * CHANNELS;
+    new_image.content = (unsigned char*)malloc(sizeof(unsigned char) * total_size);
+    memcpy(new_image.content, old_image.content, total_size);
+
+    return new_image;
+}
